@@ -27,4 +27,6 @@ $ yarn test
 ### Roadmap
 - make api calls
 - control game flow
+- tests
 - style
+- add start over button

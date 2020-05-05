@@ -49,7 +49,7 @@ export default function Game () {
       <Button
         onClick={bowl}
         style={{ display: gameStatus === 'STARTED' ? 'inline' : 'none' }}
-        disabled={!bowling}
+        disabled={bowling}
       >
         Bowl
       </Button>
@@ -60,133 +60,21 @@ export default function Game () {
 const fakePlayers = [{
   'id': 'e4cafe03-d313-430d-8afc-29a2e60e0659',
   'name': 'Assire var Anahid',
-  'score': 171,
-  'frames': [{
-    'number': 1,
-    'rolls': [2, 8],
-    'score': 17
-  }, {
-    'number': 2,
-    'rolls': [7, 3],
-    'score': 20
-  }, {
-    'number': 3,
-    'rolls': [10],
-    'score': 20
-  }, {
-    'number': 4,
-    'rolls': [4, 6],
-    'score': 16
-  }, {
-    'number': 5,
-    'rolls': [6, 4],
-    'score': 19
-  }, {
-    'number': 6,
-    'rolls': [9, 1],
-    'score': 20
-  }, {
-    'number': 7,
-    'rolls': [10],
-    'score': 20
-  }, {
-    'number': 8,
-    'rolls': [6, 4],
-    'score': 12
-  }, {
-    'number': 9,
-    'rolls': [2, 8],
-    'score': 18
-  }, {
-    'number': 10,
-    'rolls': [8, 1],
-    'score': 9
-  }]
+  'score': 0,
+  'frames': []
 }, {
   'id': 'd6df81fd-d114-4186-a550-f3559aeef7d3',
   'name': 'Francesca Findabair',
-  'score': 272,
-  'frames': [{
-    'number': 1,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 2,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 3,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 4,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 5,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 6,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 7,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 8,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 9,
-    'rolls': [10],
-    'score': 21
-  }, {
-    'number': 10,
-    'rolls': [10, 1, 0],
-    'score': 11
-  }]
+  'score': 0,
+  'frames': []
 }, {
   'id': '4ee80fa5-ca0e-4149-9e2d-022261f954f0',
   'name': 'Zoltan Chivay',
-  'score': 63,
-  'frames': [{
-    'number': 1,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 2,
-    'rolls': [10],
-    'score': 21
-  }, {
-    'number': 3,
-    'rolls': [10],
-    'score': 11
-  }, {
-    'number': 4,
-    'rolls': [1, 0],
-    'score': 1
-  }]
+  'score': 0,
+  'frames': []
 }, {
   'id': '0186dedf-1bc8-415c-93e9-30340a72cc11',
   'name': 'Carthia van Canten',
-  'score': 62,
-  'frames': [{
-    'number': 1,
-    'rolls': [10],
-    'score': 30
-  }, {
-    'number': 2,
-    'rolls': [10],
-    'score': 20
-  }, {
-    'number': 3,
-    'rolls': [10],
-    'score': 11
-  }, {
-    'number': 4,
-    'rolls': [0, 1],
-    'score': 1
-  }]
+  'score': 0,
+  'frames': []
 }]
