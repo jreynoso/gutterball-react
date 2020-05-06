@@ -35,6 +35,7 @@ export default function Frame ({ number, rolls, score, isCurrentFrame }) {
 
   const lastFrame = number === 10
   const framePinXs = lastFrame ? 4 : 6
+  const stringScore = score === 0 ? '0' : score || '\u00A0'
 
   return (
     <Box border={1} bgcolor={isCurrentFrame ? 'info.main' : ''}>
@@ -52,7 +53,7 @@ export default function Frame ({ number, rolls, score, isCurrentFrame }) {
           {lastFrame && <FramePins xs={framePinXs} pins={formatRoll(2, rolls)} hasBorder={true}/>}
         </Grid>
         <Grid item xs={12}>
-          <Box>{score || '\u00A0'}</Box>
+          <Box>{stringScore}</Box>
         </Grid>
       </Grid>
     </Box>
