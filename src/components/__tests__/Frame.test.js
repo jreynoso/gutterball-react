@@ -4,25 +4,25 @@ import Faker from 'faker'
 import Frame from '../Frame'
 
 test('formats standard gutterball frame correctly', () => {
-  const testScore = Faker.random.number()
   const frame = {
     number: 1,
     rolls: [0,0],
-    score: testScore,
+    score: 0,
     isCurrentFrame: true
   }
   const { getByText, getAllByText } = render(<Frame {...frame}/>)
   const rolls = getAllByText(/-/i)
   expect(rolls).toHaveLength(2)
-  const score = getByText(`${testScore}`)
+  const score = getByText('0')
   expect(score).toBeInTheDocument()
 })
 
 test('formats standard spare frame correctly', () => {
+  const testScore = Faker.random.number()
   const frame = {
     number: 1,
     rolls: [3,7],
-    score: Faker.random.number(),
+    score: testScore,
     isCurrentFrame: true
   }
   const { getByText } = render(<Frame {...frame}/>)
@@ -30,6 +30,8 @@ test('formats standard spare frame correctly', () => {
   expect(rollOne).toBeInTheDocument()
   const rollTwo = getByText('/')
   expect(rollTwo).toBeInTheDocument()
+  const score = getByText(`${testScore}`)
+  expect(score).toBeInTheDocument()
 })
 
 test('formats standard strike frame correctly', () => {
