@@ -3,6 +3,15 @@
 ### About
 This project provides the front end for the *Gutterball!* app.
 
+### Overview
+    .
+    ├── public          # Static assets
+    ├── src             # Source code
+    │   ├── config      # Gutterball serivce API configuration
+    │   └── service     # API calls
+    ├── package.json    # Script and dependency configuration
+    └── README.md
+    
 ### Requirements
 - yarn 2
 
@@ -25,5 +34,4 @@ $ yarn test
 ```
 
 ### Roadmap
-- tests
 - add customer player name input
