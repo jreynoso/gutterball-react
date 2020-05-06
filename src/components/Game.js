@@ -1,8 +1,10 @@
+import Grid from '@material-ui/core/Grid'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Alert from '@material-ui/lab/Alert'
 import AlertTitle from '@material-ui/lab/AlertTitle'
 import Button from '@material-ui/core/Button'
+import Container from '@material-ui/core/Container'
 import Scoreboard from './Scoreboard'
 import { getGame, startGame, createPlayer, bowl } from '../service/Gutterball'
 
@@ -108,41 +110,43 @@ export default function Game () {
   const canAddPlayers = (gameStatus === 'ready' || gameStatus === 'pending') && players && players.length < 4
 
   return (
-    <>
+    <Container>
       {error && <Alert severity="error"><AlertTitle>Error</AlertTitle>{error}</Alert>}
       <h1>Gutterball!</h1>
-      <Link as={Button} to="/game"
-            style={{ display: gameStatus === 'completed' ? 'inline' : 'none' }}
-      >
-        New Game
-      </Link>
-      <Button
-        onClick={addPlayer}
-        style={{ display: canAddPlayers  ? 'inline' : 'none' }}
-      >
-        Add Player
-      </Button>
-      <Scoreboard players={players} currentFrame={currentFrame}/>
-      <Button
-        onClick={startGutterball}
-        style={{ display: gameStatus === 'ready'  ? 'inline' : 'none' }}
-      >
-        Start Game
-      </Button>
-      <Button
-        onClick={() => bowlCurrentPlayer()}
-        style={{ display: gameStatus === 'started' ? 'inline' : 'none' }}
-        disabled={bowling}
-      >
-        Bowl
-      </Button>
-      <Button
-        onClick={() => bowlCurrentPlayer(10)}
-        style={{ display: gameStatus === 'started' ? 'inline' : 'none' }}
-        disabled={bowling}
-      >
-        Strike!
-      </Button>
-    </>
+      <Scoreboard players={players} currentFrame={currentFrame} currentPlayer={currentPlayer}/>
+      <Grid container justify={'center'} spacing={3}>
+        <Button
+          onClick={addPlayer}
+          style={{ display: canAddPlayers ? 'inline' : 'none' }}
+        >
+          Add Player
+        </Button>
+        <Button
+          onClick={startGutterball}
+          style={{ display: gameStatus === 'ready' ? 'inline' : 'none' }}
+        >
+          Start Game
+        </Button>
+        <Button
+          onClick={() => bowlCurrentPlayer()}
+          style={{ display: gameStatus === 'started' ? 'inline' : 'none' }}
+          disabled={bowling}
+        >
+          Bowl
+        </Button>
+        <Button
+          onClick={() => bowlCurrentPlayer(10)}
+          style={{ display: gameStatus === 'started' ? 'inline' : 'none' }}
+          disabled={bowling}
+        >
+          Strike!
+        </Button>
+        <Link as={Button} to="/game"
+              style={{ display: gameStatus === 'completed' ? 'inline' : 'none' }}
+        >
+          <Button>New Game</Button>
+        </Link>
+      </Grid>
+    </Container>
   )
 }

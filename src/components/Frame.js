@@ -23,9 +23,9 @@ export default function Frame ({ number, rolls, score, isCurrentFrame }) {
     if (roll === 0) {
       return '-'
     } else if (rollIdx === 1) {
-      return roll + rolls[0] === 10 ? '/' : roll
+      return roll + rolls[0] === 10 ? '/' : roll === 10 ? 'X' : roll
     } else if (rollIdx === 2) {
-      return roll + rolls[1] === 10 ? '/' : roll
+      return roll + rolls[1] === 10 ? '/' : roll === 10 ? 'X' : roll
     } else if (roll === 10) {
       return 'X'
     } else if (rollIdx === 0) {
@@ -37,9 +37,11 @@ export default function Frame ({ number, rolls, score, isCurrentFrame }) {
   const framePinXs = lastFrame ? 4 : 6
 
   return (
-    <Box width={77} border={1} bgcolor={isCurrentFrame ? 'info.main' : ''}>
+    <Box border={1} bgcolor={isCurrentFrame ? 'info.main' : ''}>
       <Grid container spacing={0}>
-        <Grid item xs={12}><Box borderBottom={1} bgcolor={'text.disabled'}>{number}</Box></Grid>
+        <Grid item xs={12}>
+          <Box borderBottom={1} bgcolor={isCurrentFrame ? 'primary.main' : 'text.disabled'}>{number}</Box>
+        </Grid>
         <Grid container direction="row"
               justify="flex-start"
               alignItems="flex-start"
@@ -49,7 +51,9 @@ export default function Frame ({ number, rolls, score, isCurrentFrame }) {
           <FramePins xs={framePinXs} pins={formatRoll(1, rolls)} hasBorder={true}/>
           {lastFrame && <FramePins xs={framePinXs} pins={formatRoll(2, rolls)} hasBorder={true}/>}
         </Grid>
-        <Grid item xs={12}><Box>{score}</Box></Grid>
+        <Grid item xs={12}>
+          <Box>{score || '\u00A0'}</Box>
+        </Grid>
       </Grid>
     </Box>
   )

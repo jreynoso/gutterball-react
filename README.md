@@ -26,5 +26,4 @@ $ yarn test
 
 ### Roadmap
 - tests
-- style
 - add customer player name input
