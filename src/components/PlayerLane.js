@@ -50,7 +50,14 @@ export default function PlayerLane ({ name, score, frames, currentFrame, isCurre
           </Grid>
         </Grid>
       </Grid>
-      <div>Score: {score}</div>
+      <Grid container
+            direction="row"
+            justify="center"
+            item xs={12}
+            spacing={2}
+      >
+        <Grid item xs={1}><Box bgcolor='info.main' border={1} borderBottom={0}>Score: {score}</Box></Grid>
+      </Grid>
     </Box>
   )
 }
