@@ -1,10 +1,24 @@
 import React from 'react'
 import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
 import PropTypes from 'prop-types'
+
+function FramePins ({ xs, pins, hasBorder = false }) {
+  return (
+    <Grid item xs={xs}>
+      <Box borderLeft={hasBorder ? 1 : 0} borderBottom={hasBorder ? 1 : 0}>
+        {pins}
+      </Box>
+    </Grid>
+  )
+}
 
 export default function Frame ({ number, rolls, score, isCurrentFrame }) {
 
-  const formatRolls = (rollIdx, rolls) => {
+  const formatRoll = (rollIdx, rolls) => {
+    if (!rolls || rolls.length <= rollIdx) {
+      return '\u00A0'
+    }
     const roll = rolls[rollIdx]
     if (roll === 0) {
       return '-'
@@ -19,17 +33,24 @@ export default function Frame ({ number, rolls, score, isCurrentFrame }) {
     }
   }
 
-  const hasFirstRoll = rolls && rolls.length > 0
-  const hasSecondRoll = rolls && rolls.length > 1
-  const hasThirdRoll = rolls && rolls.length > 2
+  const lastFrame = number === 10
+  const framePinXs = lastFrame ? 4 : 6
 
   return (
-    <Box color={isCurrentFrame ? 'text.primary' : 'text.secondary'}>
-      <span>Frame #:{number}</span><br/>
-      {hasFirstRoll && <span>{formatRolls(0, rolls)}</span>}
-      {hasSecondRoll && <span> {formatRolls(1, rolls)}</span>}
-      {hasThirdRoll && <span> {formatRolls(2, rolls)}</span>}
-      <br/><span>Score: {score}</span>
+    <Box width={77} border={1} bgcolor={isCurrentFrame ? 'info.main' : ''}>
+      <Grid container spacing={0}>
+        <Grid item xs={12}><Box borderBottom={1} bgcolor={'text.disabled'}>{number}</Box></Grid>
+        <Grid container direction="row"
+              justify="flex-start"
+              alignItems="flex-start"
+              item xs={12}
+        >
+          <FramePins xs={framePinXs} pins={formatRoll(0, rolls)}/>
+          <FramePins xs={framePinXs} pins={formatRoll(1, rolls)} hasBorder={true}/>
+          {lastFrame && <FramePins xs={framePinXs} pins={formatRoll(2, rolls)} hasBorder={true}/>}
+        </Grid>
+        <Grid item xs={12}><Box>{score}</Box></Grid>
+      </Grid>
     </Box>
   )
 }
