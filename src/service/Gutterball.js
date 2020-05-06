@@ -12,7 +12,6 @@ function getApiUrl () {
 
 function postData (url = '', data = {}) {
   const apiUrl = getApiUrl()
-  console.log('apiUrl=', apiUrl)
   return fetch(`${apiUrl}${url}`, {
     method: 'POST',
     headers: {
@@ -20,15 +19,14 @@ function postData (url = '', data = {}) {
     },
     body: JSON.stringify(data)
   })
-  .then(r => r.json())
+  .then(r => r.ok ? r.json() : r.text())
   .then(response => response)
 }
 
 function getData (url = '') {
   const apiUrl = getApiUrl()
-  console.log('apiUrl=', apiUrl)
   return fetch(`${apiUrl}${url}`)
-  .then(r => r.json())
+  .then(r => r.ok ? r.json() : r.text())
   .then(response => response)
 }
 

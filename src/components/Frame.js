@@ -8,14 +8,14 @@ export default function Frame ({ number, rolls, score, isCurrentFrame }) {
     const roll = rolls[rollIdx]
     if (roll === 0) {
       return '-'
-    } else if (roll === 10) {
-      return 'X'
-    } else if (rollIdx === 0) {
-      return roll
     } else if (rollIdx === 1) {
       return roll + rolls[0] === 10 ? '/' : roll
     } else if (rollIdx === 2) {
       return roll + rolls[1] === 10 ? '/' : roll
+    } else if (roll === 10) {
+      return 'X'
+    } else if (rollIdx === 0) {
+      return roll
     }
   }
 

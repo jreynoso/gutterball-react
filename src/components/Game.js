@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import Alert from '@material-ui/lab/Alert'
+import AlertTitle from '@material-ui/lab/AlertTitle'
 import Button from '@material-ui/core/Button'
 import Scoreboard from './Scoreboard'
 import { getGame, startGame, createPlayer, bowl } from '../service/Gutterball'
@@ -8,12 +10,13 @@ export default function Game () {
   const { id } = useParams()
 
   const [gameId] = useState(id)
-  const [gameStatus, setGameStatus] = useState()
+  const [gameStatus, setGameStatus] = useState(null)
   const [players, setPlayers] = useState([])
   const [currentFrame, setCurrentFrame] = useState(0)
   const [currentPlayer, setCurrentPlayer] = useState(1)
   const [bowling, setBowling] = useState(false)
   const [nextMax, setNextMax] = useState(10)
+  const [error, setError] = useState(null)
 
   const randomInt = (max) => {
     return Math.floor(Math.random() * Math.floor(max + 1))
@@ -27,98 +30,119 @@ export default function Game () {
 
   useEffect(() => {
     if (gameId) {
-      console.log('loading gameId=', gameId)
-      getGame(gameId).then(game => {
-          if (game) {
-            setGameStatus(game.status)
-            setPlayers(game.players)
-            setCurrentFrame(game.currentFrame)
-            setCurrentPlayer(game.nextPlayer)
-            // TODO: Set next max based on last roll for player and frame
+      getGame(gameId).then(response => {
+          if (response && response.id) {
+            setGameStatus(response.status)
+            setPlayers(response.players)
+            setCurrentFrame(response.currentFrame)
+            setCurrentPlayer(response.nextPlayer)
+            setBowling(false)
+            setError(null)
+
+            if (response.status === 'started') {
+              const player = response.players[response.nextPlayer - 1]
+              const frame = player.frames[response.currentFrame - 1]
+              if (frame) {
+                const lastRoll = frame.rolls[frame.rolls.length - 1]
+                setNextMax(lastRoll < 10 ? 10 - lastRoll : 10)
+              }
+            }
+          } else {
+            setError(`unable to find gameId=${gameId}: ${response}`)
           }
         },
-        () => {
-          // TODO: handle error
-        }
+        ex => setError(`unexpected error: ${ex}`)
       )
     }
   }, [gameId])
 
   const addPlayer = () => {
     const playerName = `Player ${players.length + 1}` // TODO: custom player name
-    console.log('adding a player')
-    createPlayer(gameId, playerName).then(player => {
-        if (player) {
-          setPlayers(players.concat(player))
+    createPlayer(gameId, playerName).then(response => {
+        if (response && response.id) {
+          setPlayers(players.concat(response))
           setGameStatus('ready')
+        } else {
+          setError(`unable to add player to gameId=${gameId}: ${response}`)
         }
       },
-      () => {
-        // TODO: handle error
-      }
+      ex => setError(`unexpected error: ${ex}`)
     )
   }
 
   const startGutterball = () => {
-    console.log('starting game')
-    startGame(gameId).then(game => {
-        if (game) {
-          setGameStatus(game.status)
-          setCurrentFrame(game.currentFrame)
-          setCurrentPlayer(game.nextPlayer)
+    startGame(gameId).then(response => {
+        if (response && response.id) {
+          setGameStatus(response.status)
+          setCurrentFrame(response.currentFrame)
+          setCurrentPlayer(response.nextPlayer)
+        } else {
+          setError(`unable to start gameId=${gameId}: ${response}`)
         }
       },
-      () => {
-        // TODO: handle error
-      }
+      ex => setError(`unexpected error: ${ex}`)
     )
   }
 
-  const bowlCurrentPlayer = () => {
+  const bowlCurrentPlayer = (pins) => {
     setBowling(true)
+    if (pins === undefined) {
+      pins = getNextPins()
+    }
     const player = players[currentPlayer - 1]
-    console.log(`bowling for current player ${currentPlayer}`)
-    bowl(gameId, player.id, getNextPins()).then(game => {
-        if (game) {
-          setGameStatus(game.status)
-          setPlayers(game.players)
-          setCurrentFrame(game.currentFrame)
-          setCurrentPlayer(game.nextPlayer)
-          setBowling(false)
+    bowl(gameId, player.id, pins).then(response => {
+        if (response && response.id) {
+          setGameStatus(response.status)
+          setPlayers(response.players)
+          setCurrentFrame(response.currentFrame)
+          setCurrentPlayer(response.nextPlayer)
+        } else {
+          setError(`failed to bowl: ${response}`)
         }
-      },
-      () => {
-        // TODO: handle error
         setBowling(false)
-      }
+      },
+      ex => setError(`unexpected error: ${ex}`)
     )
   }
+
+  const canAddPlayers = (gameStatus === 'ready' || gameStatus === 'pending') && players && players.length < 4
 
   return (
-    <div>
-      <h1>Game: {gameId} ({gameStatus})</h1>
+    <>
+      {error && <Alert severity="error"><AlertTitle>Error</AlertTitle>{error}</Alert>}
+      <h1>Gutterball!</h1>
+      <Link as={Button} to="/game"
+            style={{ display: gameStatus === 'completed' ? 'inline' : 'none' }}
+      >
+        New Game
+      </Link>
       <Button
         onClick={addPlayer}
-        style={{ display: gameStatus === 'pending' && players && players.length < 4 ? 'inline' : 'none' }}
+        style={{ display: canAddPlayers  ? 'inline' : 'none' }}
       >
         Add Player
       </Button>
+      <Scoreboard players={players} currentFrame={currentFrame}/>
       <Button
         onClick={startGutterball}
         style={{ display: gameStatus === 'ready'  ? 'inline' : 'none' }}
       >
         Start Game
       </Button>
-
-      <Scoreboard players={players} currentFrame={currentFrame}/>
-
       <Button
-        onClick={bowlCurrentPlayer}
+        onClick={() => bowlCurrentPlayer()}
         style={{ display: gameStatus === 'started' ? 'inline' : 'none' }}
         disabled={bowling}
       >
         Bowl
       </Button>
-    </div>
+      <Button
+        onClick={() => bowlCurrentPlayer(10)}
+        style={{ display: gameStatus === 'started' ? 'inline' : 'none' }}
+        disabled={bowling}
+      >
+        Strike!
+      </Button>
+    </>
   )
 }

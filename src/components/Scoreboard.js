@@ -21,7 +21,6 @@ export default function Scoreboard ({ players, currentFrame }) {
 
   return (
     <Container>
-      <h2>Scoreboard</h2>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           {players && players.map((player) => (

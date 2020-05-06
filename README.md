@@ -27,4 +27,4 @@ $ yarn test
 ### Roadmap
 - tests
 - style
-- add start over button
+- add customer player name input
