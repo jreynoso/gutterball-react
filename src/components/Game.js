@@ -1,31 +1,97 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import Scoreboard from './Scoreboard'
+import { getGame, startGame, createPlayer, bowl } from '../service/Gutterball'
 
 export default function Game () {
   const { id } = useParams()
-  // TODO: load game state from id or error if not exists
+
   const [gameId] = useState(id)
-  const [gameStatus, setGameStatus] = useState('SETUP') // TODO: Get status from game state
-  const [players, setPlayers] = useState([])            // TODO: Get players from game state
-  const [currentFrame, setCurrentFrame] = useState(0)   // TODO: Get players from game state
+  const [gameStatus, setGameStatus] = useState()
+  const [players, setPlayers] = useState([])
+  const [currentFrame, setCurrentFrame] = useState(0)
+  const [currentPlayer, setCurrentPlayer] = useState(1)
   const [bowling, setBowling] = useState(false)
+  const [nextMax, setNextMax] = useState(10)
+
+  const randomInt = (max) => {
+    return Math.floor(Math.random() * Math.floor(max + 1))
+  }
+
+  const getNextPins = () => {
+    const pins = randomInt(nextMax)
+    setNextMax(pins < 10 ? 10 - pins : 10)
+    return pins
+  }
+
+  useEffect(() => {
+    if (gameId) {
+      console.log('loading gameId=', gameId)
+      getGame(gameId).then(game => {
+          if (game) {
+            setGameStatus(game.status)
+            setPlayers(game.players)
+            setCurrentFrame(game.currentFrame)
+            setCurrentPlayer(game.nextPlayer)
+            // TODO: Set next max based on last roll for player and frame
+          }
+        },
+        () => {
+          // TODO: handle error
+        }
+      )
+    }
+  }, [gameId])
 
   const addPlayer = () => {
-    // TODO: create a new player
-    setPlayers(players.concat(fakePlayers[players.length]))
+    const playerName = `Player ${players.length + 1}` // TODO: custom player name
+    console.log('adding a player')
+    createPlayer(gameId, playerName).then(player => {
+        if (player) {
+          setPlayers(players.concat(player))
+          setGameStatus('ready')
+        }
+      },
+      () => {
+        // TODO: handle error
+      }
+    )
   }
 
-  const startGame = () => {
-    // TODO: start game
-    setGameStatus('STARTED')
-    setCurrentFrame(1)
+  const startGutterball = () => {
+    console.log('starting game')
+    startGame(gameId).then(game => {
+        if (game) {
+          setGameStatus(game.status)
+          setCurrentFrame(game.currentFrame)
+          setCurrentPlayer(game.nextPlayer)
+        }
+      },
+      () => {
+        // TODO: handle error
+      }
+    )
   }
 
-  const bowl = () => {
+  const bowlCurrentPlayer = () => {
     setBowling(true)
-    // TODO: make bowl api call for player, update scoreboard for player, and unset bowling
+    const player = players[currentPlayer - 1]
+    console.log(`bowling for current player ${currentPlayer}`)
+    bowl(gameId, player.id, getNextPins()).then(game => {
+        if (game) {
+          setGameStatus(game.status)
+          setPlayers(game.players)
+          setCurrentFrame(game.currentFrame)
+          setCurrentPlayer(game.nextPlayer)
+          setBowling(false)
+        }
+      },
+      () => {
+        // TODO: handle error
+        setBowling(false)
+      }
+    )
   }
 
   return (
@@ -33,13 +99,13 @@ export default function Game () {
       <h1>Game: {gameId} ({gameStatus})</h1>
       <Button
         onClick={addPlayer}
-        style={{ display: players.length < 4 ? 'inline' : 'none' }}
+        style={{ display: gameStatus === 'pending' && players && players.length < 4 ? 'inline' : 'none' }}
       >
         Add Player
       </Button>
       <Button
-        onClick={startGame}
-        style={{ display: gameStatus === 'SETUP' && players.length > 0 ? 'inline' : 'none' }}
+        onClick={startGutterball}
+        style={{ display: gameStatus === 'ready'  ? 'inline' : 'none' }}
       >
         Start Game
       </Button>
@@ -47,8 +113,8 @@ export default function Game () {
       <Scoreboard players={players} currentFrame={currentFrame}/>
 
       <Button
-        onClick={bowl}
-        style={{ display: gameStatus === 'STARTED' ? 'inline' : 'none' }}
+        onClick={bowlCurrentPlayer}
+        style={{ display: gameStatus === 'started' ? 'inline' : 'none' }}
         disabled={bowling}
       >
         Bowl
@@ -56,25 +122,3 @@ export default function Game () {
     </div>
   )
 }
-
-const fakePlayers = [{
-  'id': 'e4cafe03-d313-430d-8afc-29a2e60e0659',
-  'name': 'Assire var Anahid',
-  'score': 0,
-  'frames': []
-}, {
-  'id': 'd6df81fd-d114-4186-a550-f3559aeef7d3',
-  'name': 'Francesca Findabair',
-  'score': 0,
-  'frames': []
-}, {
-  'id': '4ee80fa5-ca0e-4149-9e2d-022261f954f0',
-  'name': 'Zoltan Chivay',
-  'score': 0,
-  'frames': []
-}, {
-  'id': '0186dedf-1bc8-415c-93e9-30340a72cc11',
-  'name': 'Carthia van Canten',
-  'score': 0,
-  'frames': []
-}]

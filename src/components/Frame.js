@@ -22,7 +22,7 @@ export default function Frame ({ number, rolls, score, isCurrentFrame }) {
   const hasThirdRoll = rolls && rolls.length > 2
 
   return (
-    <Box color={isCurrentFrame ? 'text.secondary' : 'text.primary'}>
+    <Box color={isCurrentFrame ? 'text.primary' : 'text.secondary'}>
       <span>Frame #:{number}</span><br/>
       {hasFirstRoll && <span>{formatRolls(0, rolls)}</span>}
       {hasSecondRoll && <span> {formatRolls(1, rolls)}</span>}

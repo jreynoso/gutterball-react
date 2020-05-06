@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 import Game from './components/Game'
+import GameError from './components/GameError'
 import NewGame from './components/NewGame'
 import logo from './logo.svg'
 import './App.css'
@@ -15,6 +16,9 @@ function App () {
           </Route>
           <Route exact path="/game">
             <NewGame/>
+          </Route>
+          <Route exact path="/game/error">
+            <GameError/>
           </Route>
           <Route exact path="/game/:id">
             <Game/>
