@@ -56,7 +56,7 @@ export default function PlayerLane ({ name, score, frames, currentFrame, isCurre
             item xs={12}
             spacing={2}
       >
-        <Grid item xs={1}><Box bgcolor='info.main' border={1} borderBottom={0}>Score: {score}</Box></Grid>
+        <Grid item xs={2}><Box bgcolor='info.main' border={1} borderBottom={0}>Score: {score}</Box></Grid>
       </Grid>
     </Box>
   )
