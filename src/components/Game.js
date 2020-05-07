@@ -128,8 +128,8 @@ export default function Game () {
   }
 
   const canAddPlayers = (gameStatus === 'ready' || gameStatus === 'pending') && players && players.length < 4
-  const currFrame = gameStatus !== 'completed' ?  currentFrame : 0
-  const currPlayer = gameStatus !== 'completed' ?  currentPlayer : 0
+  const currFrame = gameStatus === 'started' ?  currentFrame : 0
+  const currPlayer = gameStatus === 'started' ?  currentPlayer : 0
 
   return (
     <Container>
