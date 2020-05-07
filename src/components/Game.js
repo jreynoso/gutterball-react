@@ -68,7 +68,7 @@ export default function Game () {
           winners = [player.id]
           highestScore = player.score
         } else if (player.score === highestScore) {
-          winners.concat(player.id)
+          winners.push(player.id)
         }
       })
       setWinnerIds(winners)
