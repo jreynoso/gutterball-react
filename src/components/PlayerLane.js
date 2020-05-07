@@ -27,8 +27,7 @@ export default function PlayerLane ({ name, score, frames, currentFrame, isCurre
     while (fullFrames.length < 10) {
       fullFrames.push({
         number: frameCount++,
-        rolls: [],
-        score: 0
+        rolls: []
       })
     }
     return fullFrames
