@@ -36,7 +36,7 @@ export default function PlayerLane ({ name, score, frames, currentFrame, isCurre
   const fullFrames = fillFrames(frames)
 
   return (
-    <Box border={1}>
+    <Box border={1} borderColor={isWinner ? 'success.main' : 'text.main'}>
       <Grid container className={classes.root} spacing={1}>
         <Grid item xs={4}>
           <Box bgcolor={isWinner ? 'success.main' : isCurrentPlayer ? 'info.main' : 'text.disabled'}>{name}</Box>
