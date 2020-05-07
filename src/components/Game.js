@@ -81,6 +81,7 @@ export default function Game () {
         if (response && response.id) {
           setPlayers(players.concat(response))
           setGameStatus('ready')
+          setError(null)
         } else {
           setError(`unable to add player to gameId=${gameId}: ${response}`)
         }
@@ -95,6 +96,7 @@ export default function Game () {
           setGameStatus(response.status)
           setCurrentFrame(response.currentFrame)
           setCurrentPlayer(response.nextPlayer)
+          setError(null)
         } else {
           setError(`unable to start gameId=${gameId}: ${response}`)
         }
@@ -115,6 +117,7 @@ export default function Game () {
           setPlayers(response.players)
           setCurrentFrame(response.currentFrame)
           setCurrentPlayer(response.nextPlayer)
+          setError(null)
         } else {
           setError(`failed to bowl: ${response}`)
         }
