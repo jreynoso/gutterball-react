@@ -52,6 +52,7 @@ export default function Game () {
             }
           } else {
             setError(`unable to find gameId=${gameId}: ${response}`)
+            setGameStatus('completed')
           }
         },
         ex => setError(`unexpected error: ${ex}`)
