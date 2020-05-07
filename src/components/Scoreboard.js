@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function Scoreboard ({ players, currentFrame, currentPlayer }) {
+export default function Scoreboard ({ players, currentFrame, currentPlayer, winnerIds }) {
   const classes = useStyles()
   const player = players && players[currentPlayer - 1]
   const currentPlayerId = player && player.id
@@ -29,6 +29,7 @@ export default function Scoreboard ({ players, currentFrame, currentPlayer }) {
               className={classes.paper}
               currentFrame={currentFrame}
               isCurrentPlayer={player.id === currentPlayerId}
+              isWinner={winnerIds.includes(player.id)}
               {...player}
             />
           </Grid>
@@ -42,4 +43,5 @@ Scoreboard.propTypes = {
   players: PropTypes.array,
   currentFrame: PropTypes.number,
   currentPlayer: PropTypes.number,
+  winnerIds: PropTypes.array
 }

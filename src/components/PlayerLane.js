@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export default function PlayerLane ({ name, score, frames, currentFrame, isCurrentPlayer }) {
+export default function PlayerLane ({ name, score, frames, currentFrame, isCurrentPlayer, isWinner }) {
   const classes = useStyles()
 
   const fillFrames = (frames) => {
@@ -38,7 +38,9 @@ export default function PlayerLane ({ name, score, frames, currentFrame, isCurre
   return (
     <Box border={1}>
       <Grid container className={classes.root} spacing={1}>
-        <Grid item xs={4}><Box bgcolor={isCurrentPlayer ? 'info.main' : 'text.disabled'}>{name}</Box></Grid>
+        <Grid item xs={4}>
+          <Box bgcolor={isWinner ? 'success.main' : isCurrentPlayer ? 'info.main' : 'text.disabled'}>{name}</Box>
+        </Grid>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={2}>
             {fullFrames && fullFrames.map((frame) => (
@@ -55,7 +57,9 @@ export default function PlayerLane ({ name, score, frames, currentFrame, isCurre
             item xs={12}
             spacing={2}
       >
-        <Grid item xs={2}><Box bgcolor='info.main' border={1} borderBottom={0}>Score: {score}</Box></Grid>
+        <Grid item xs={2}>
+          <Box bgcolor={isWinner ? 'success.main' : 'info.main'} border={1} borderBottom={0}>Score: {score}</Box>
+        </Grid>
       </Grid>
     </Box>
   )
@@ -67,4 +71,5 @@ PlayerLane.propTypes = {
   frames: PropTypes.array,
   currentFrame: PropTypes.number,
   isCurrentPlayer: PropTypes.bool,
+  isWinner: PropTypes.bool
 }

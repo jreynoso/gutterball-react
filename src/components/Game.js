@@ -19,6 +19,7 @@ export default function Game () {
   const [bowling, setBowling] = useState(false)
   const [nextMax, setNextMax] = useState(10)
   const [error, setError] = useState(null)
+  const [winnerIds, setWinnerIds] = useState([])
 
   const randomInt = (max) => {
     return Math.floor(Math.random() * Math.floor(max + 1))
@@ -57,6 +58,22 @@ export default function Game () {
       )
     }
   }, [gameId])
+
+  useEffect(() => {
+    if (gameStatus === 'completed') {
+      let highestScore = 0
+      let winners = []
+      players.forEach(player => {
+        if (player.score > highestScore) {
+          winners = [player.id]
+          highestScore = player.score
+        } else if (player.score === highestScore) {
+          winners.concat(player.id)
+        }
+      })
+      setWinnerIds(winners)
+    }
+  }, [players, gameStatus])
 
   const addPlayer = () => {
     const playerName = `Player ${players.length + 1}` // TODO: custom player name
@@ -108,12 +125,14 @@ export default function Game () {
   }
 
   const canAddPlayers = (gameStatus === 'ready' || gameStatus === 'pending') && players && players.length < 4
+  const currFrame = gameStatus !== 'completed' ?  currentFrame : 0
+  const currPlayer = gameStatus !== 'completed' ?  currentPlayer : 0
 
   return (
     <Container>
       {error && <Alert severity="error"><AlertTitle>Error</AlertTitle>{error}</Alert>}
       <h1>Gutterball!</h1>
-      <Scoreboard players={players} currentFrame={currentFrame} currentPlayer={currentPlayer}/>
+      <Scoreboard players={players} currentFrame={currFrame} currentPlayer={currPlayer} winnerIds={winnerIds}/>
       <Grid container justify={'center'} spacing={3}>
         <Button
           onClick={addPlayer}
